@@ -71,4 +71,77 @@ public class StringUtilsTest extends BaseTestCase {
     void testCapitalize(String input, String expected) {
         assertEquals(expected, StringUtils.capitalize(input));
     }
+
+    @Test
+    public void testReverse() {
+        assertNull(StringUtils.reverse(null));
+        assertEquals("", StringUtils.reverse(""));
+        assertEquals("dcba", StringUtils.reverse("abcd"));
+        assertEquals("ESACREPPU", StringUtils.reverse("UPPERCASE"));
+        assertEquals("noom eht ot uoy evol", StringUtils.reverse("love you to the moon"));
+        assertEquals("%$#@", StringUtils.reverse("@#$%"));
+        assertEquals("   ", StringUtils.reverse("   "));
+        assertEquals("321", StringUtils.reverse("123"));
+        assertEquals("cba ", StringUtils.reverse(" abc"));
+        assertEquals(" cba", StringUtils.reverse("abc "));
+        assertEquals("ă", StringUtils.reverse("ă"));
+        assertEquals("3c2b1a", StringUtils.reverse("a1b2c3"));
+        assertEquals("c3b2a1", StringUtils.reverse("1a2b3c"));
+        assertEquals("😀", StringUtils.reverse("😀"));
+        assertEquals("cba\n", StringUtils.reverse("\nabc"));
+        assertEquals("racecar", StringUtils.reverse("racecar"));
+
+        // Additional edge cases
+        assertEquals("A", StringUtils.reverse("A"));
+        assertEquals(" ", StringUtils.reverse(" "));
+        assertEquals("\n\t\r", StringUtils.reverse("\r\t\n"));
+        assertEquals("ba", StringUtils.reverse("ab"));
+        assertEquals("cba", StringUtils.reverse("abc"));
+        assertEquals("a b a", StringUtils.reverse("a b a"));
+        assertEquals("a@a", StringUtils.reverse("a@a"));
+        assertEquals(")(*&^%", StringUtils.reverse("%^&*()"));
+    }
+    @Test
+    public void testContainsIgnoreCase() {
+        // Null cases
+        assertFalse(StringUtils.containsIgnoreCase(null, "abc"));
+        assertFalse(StringUtils.containsIgnoreCase("abc", null));
+        assertFalse(StringUtils.containsIgnoreCase(null, null));
+
+        // Empty cases
+        assertTrue(StringUtils.containsIgnoreCase("", ""));
+        assertTrue(StringUtils.containsIgnoreCase("abc", ""));
+        assertTrue(StringUtils.containsIgnoreCase("", ""));
+
+        // Exact matches
+        assertTrue(StringUtils.containsIgnoreCase("hello world", "hello"));
+        assertTrue(StringUtils.containsIgnoreCase("hello world", "world"));
+
+        // Case insensitive matches
+        assertTrue(StringUtils.containsIgnoreCase("HELLO WORLD", "hello"));
+        assertTrue(StringUtils.containsIgnoreCase("hello WORLD", "Hello"));
+        assertTrue(StringUtils.containsIgnoreCase("Hello World", "WORLD"));
+
+        // Partial matches
+        assertTrue(StringUtils.containsIgnoreCase("hello world", "lo wo"));
+        assertTrue(StringUtils.containsIgnoreCase("HELLO WORLD", "lo wo"));
+
+        // Not found cases
+        assertFalse(StringUtils.containsIgnoreCase("hello world", "test"));
+        assertFalse(StringUtils.containsIgnoreCase("hello world", "HELLO WORLD EXTRA"));
+
+        // Special characters
+        assertTrue(StringUtils.containsIgnoreCase("hello@world#123", "@WORLD"));
+        assertTrue(StringUtils.containsIgnoreCase("test123", "TEST"));
+
+        // Unicode characters
+        assertTrue(StringUtils.containsIgnoreCase("hello ăâđêôơư", "ĂÂĐ"));
+        assertTrue(StringUtils.containsIgnoreCase("TEST ĂÂĐ", "test ăâđ"));
+
+        // Edge cases
+        assertTrue(StringUtils.containsIgnoreCase("   ", " "));
+        assertTrue(StringUtils.containsIgnoreCase("abc", "b"));
+        assertTrue(StringUtils.containsIgnoreCase("abc", "B"));
+        assertTrue(StringUtils.containsIgnoreCase("multiple words test", "WORDS TEST"));
+    }
 }
